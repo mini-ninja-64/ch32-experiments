@@ -57,9 +57,9 @@ _start:
      * 
      * WCH define several vendor specific CSR's for the QingKeV4 series of chips:
      * 
-     * | CSR Register | Address | Description                          |
-     * |--------------|---------|--------------------------------------|
-     * | gintenr      | 0x800   | 
+     * | CSR Register | Address | Description                                                                                 |
+     * |--------------|---------|---------------------------------------------------------------------------------------------|
+     * | gintenr      | 0x800   |                                                                                             |
      * | intsyscr     | 0x804   | Interrupt configuration, changes how interrupts are processed by the processor              |
      * | corecfgr     | 0xBC0   | Processor pipeline configuration, used to configure branch prediction and simmilar features |
      * 
@@ -89,7 +89,7 @@ _start:
     // - MPIE [1]
     // - MIE  [1] 
     li t0, 0x6088           
-   	csrs mstatus, t0
+    csrs mstatus, t0
 
     // Load exception vector table
     la t0, _vectors
