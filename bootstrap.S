@@ -101,4 +101,4 @@ _start:
     // Switch to user mode and run main function
     la t0, main // Load main function address
     csrw mepc, t0 // Write address to mepc
-    mret // This will switch from M-mode to U-mode and jump to the address stored in mepc
+    mret // This will switch from M-mode to U-mode and jump to the address stored in mepc as dictated by MPP set in mstatus
