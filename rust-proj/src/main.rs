@@ -3,7 +3,11 @@
 
 use core::panic::PanicInfo;
 use core::arch::global_asm;
-use ch32v3::ch32v30x;
+use ch32v3::ch32v30x::{self, RCC};
+
+mod hal;
+
+use hal::rcc::Constrainable;
 
 global_asm!(include_str!("../bootstrap.S"));
 
@@ -20,10 +24,40 @@ pub extern "C" fn entry_point() -> ! {
     let peripherals = unsafe { ch32v30x::Peripherals::steal() };
     
     let rcc = peripherals.RCC;
+    // Activate HSE
+    rcc.ctlr.write(|w|
+        w.hseon().set_bit()
+    );
+
+    // TODO: BLOCK UNTIL READY & ERROR CHECK
+
+    // Using an 8MHz HSE
+    rcc.cfgr0.write(|w| unsafe { 
+        w
+            // Set APB1 clock to be divided by 2
+            .ppre1().bits(0b100)
+            // Set APB2 clock to not be divided
+            .ppre2().bits(0)
+            // Set PREDIV1SRC to HSE
+            .hpre().bits(0)
+            // Set PLL as systemclk source
+            .sw().bits(0b10)
+            // Set PLL Multiplier to 18
+            .pllmul().bits(0b1111)
+            // Set PLL division to 1
+            .pllxtpre().clear_bit()
+            // Set PLL source to HSE
+            .pllsrc().set_bit()
+    });
+
+    rcc.ctlr.write(|w|
+        w.pllon().set_bit()
+    );
+
     rcc.apb2pcenr.write(|w| 
         w.iopcen().set_bit()
     );
-    
+
     let gpioc = peripherals.GPIOC;
 
     unsafe {
@@ -39,6 +73,7 @@ pub extern "C" fn entry_point() -> ! {
     gpioc
         .outdr
         .write(|w| w.odr8().set_bit());
+
     loop { 
         gpioc
             .outdr
