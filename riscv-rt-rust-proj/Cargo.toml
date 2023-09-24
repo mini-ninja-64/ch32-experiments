@@ -1,0 +1,12 @@
+[package]
+name = "riscv-rt-rust-proj"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+ch32v3 = { version = "0.1.6", features = ["ch32v30x", "critical-section"] }
+riscv = { version = "0.10.1", features =  ["critical-section-single-hart"] }
+riscv-rt = "0.11.0"
