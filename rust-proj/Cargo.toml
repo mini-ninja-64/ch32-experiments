@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 ch32v3 = { version = "0.1.6", features = ["ch32v30x", "critical-section"] }
-riscv = { version = "0.10.1", features =  ["critical-section-single-hart"] }
+riscv = { version = "0.10.1" }

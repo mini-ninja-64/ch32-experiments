@@ -13,8 +13,6 @@ _start:
 
     // TODO: Do we need to zero-out registers?
 
-    // TODO: pretty sure we dont need to do any hart stuff since no multi thread
-
     // Initialize stack pointer to correct location
     // Interestingly the rust-embedded groups minimal 
     // riscv-rt calculates stack_end at runtime using 
@@ -88,14 +86,12 @@ _start:
     li t0, 0x6088           
     csrs mstatus, t0
 
-    # // Load exception vector table
+    # // TODO: Load exception vector table
     # la t0, _vectors
     # // The bottom 2 bits of the vector address are ignored,
     # // they are used for MODE0 & MODE1 bits
     # ori t0, t0, 0b11
     # csrw mtvec, t0
-
-    # jal zero, entry_point < - hard jump to entry_point, this works but user mode switching does not
 
     // Switch to user mode and run main function
     la t0, entry_point // Load main function address

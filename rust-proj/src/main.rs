@@ -4,7 +4,6 @@
 use core::panic::PanicInfo;
 use core::arch::global_asm;
 use ch32v3::ch32v30x;
-use riscv::{self as _};
 
 global_asm!(include_str!("../bootstrap.S"));
 
@@ -15,7 +14,10 @@ fn panic(_panic: &PanicInfo<'_>) -> ! {
 
 #[no_mangle]
 pub extern "C" fn entry_point() -> ! {
-    let peripherals = ch32v30x::Peripherals::take().unwrap();
+    // TODO: Skip proper taking of peripherals for now as the default riscv impl requires 
+    //       running in machine mode to disable interrupts by modifying mstatus, we could
+    //       utilise WCH's gintenr register to modify MIE and MPIE in user mode
+    let peripherals = unsafe { ch32v30x::Peripherals::steal() };
     
     let rcc = peripherals.RCC;
     rcc.apb2pcenr.write(|w| 
